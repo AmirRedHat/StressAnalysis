@@ -2,10 +2,12 @@ from concurrent.futures import ThreadPoolExecutor
 from requests import get
 
 
-def send(*args, **kwargs):
-    request_count = kwargs.pop("request_count", 1)
-    is_parallel = kwargs.pop("is_parallel", False)
-    workers_count = kwargs.pop("workers_count", 20)
+def send(
+    request_count: int = 1,
+    is_parallel: bool = False,
+    workers_count: int = 20,
+    *args,
+    **kwargs):
     
     def function_decorator(func):
         def class_decorator(class_):
@@ -17,13 +19,3 @@ def send(*args, **kwargs):
                     
         return class_decorator
     return function_decorator
-
-
-def send_parallel(url: str):
-    count = 0
-    with ThreadPoolExecutor(max_workers=10) as executor:
-        for _ in range(1000):
-            executor.submit(get, url) 
-            count += 1
-            
-    print(count)
